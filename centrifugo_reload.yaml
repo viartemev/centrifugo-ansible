@@ -1,0 +1,20 @@
+- hosts: centrifugo
+  gather_facts: yes
+
+  vars_files:
+      - ./centrifugo_vars.yml
+
+  tasks:
+  - name: 'Copy centrifugo config'
+    become: yes
+    copy:
+      src: "{{ centrifugo_config_src }}" 
+      dest: /etc/centrifugo/config.json
+      owner: centrifugo
+      group: centrifugo
+
+  - name: 'Make sure Centrifugo is running'
+    become: yes
+    systemd:
+      state: restarted
+      name: centrifugo 
